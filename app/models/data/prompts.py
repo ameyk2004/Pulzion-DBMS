@@ -54,7 +54,7 @@ class PromptProvider:
 
         return f"""
         I am providing you with a JSON structure containing metadata about a database, including tables, columns, relationships, and views. Based on this information, please analyze the following user query and generate the corresponding SQL queries.
-
+        - IMPORTANT NOTE: FOR ANY QUERY Do not USE ANY DBMS SPECIFIC COMMAND INSTEAD USE NESTED SELECT QUERIES IF REQUIRED
         User Query: "{query}"
 
         Context JSON:
@@ -81,6 +81,7 @@ class PromptProvider:
         {query}
 
         Please optimize this query for better performance, ensuring that the required results remain unchanged.
+        - IMPORTANT NOTE: FOR ANY QUERY Do not USE ANY DBMS SPECIFIC COMMAND INSTEAD USE NESTED SELECT QUERIES IF REQUIRED
 
         I am providing a json structure containing metadata about a database, including tables, columns, relationships, and views which also conatins columns which are indexed
         Use this information to optimize the query.

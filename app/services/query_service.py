@@ -12,8 +12,8 @@ def load_model(model):
     if model == "gemini":
         return GeminiLLM(preserve_history=True)
     
-def generate_query(prompt, model):
-    json_context = generate_metadata(queries, connection_uri)
+def generate_query(prompt, model, dbms):
+    json_context = generate_metadata(queries, connection_uri, dbms)
     llm = load_model(model)
     llm.load_model()
     print(prompt)

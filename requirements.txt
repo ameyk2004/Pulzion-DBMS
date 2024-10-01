@@ -4,6 +4,10 @@ fastapi
 uvicorn
 requests
 google.generativeai
+python-dotenv
+docker
+psycopg2-binary
+mysql-connector-python
 
 
 

@@ -2,7 +2,7 @@ from langchain_community.utilities.sql_database import SQLDatabase
 from ..config import *
 
 
-def generate_metadata(queries, connection_uri):
+def generate_metadata(queries, connection_uri, dbms):
     try:
         db = SQLDatabase.from_uri(connection_uri)
 
@@ -13,7 +13,8 @@ def generate_metadata(queries, connection_uri):
             "number_of_procedures": 0,
             "procedures": {},
             "tables": {},
-            "views": []
+            "views": [],
+            "dbms used" : dbms
         }
 
         tables_result = db._execute(queries["Tables"])
