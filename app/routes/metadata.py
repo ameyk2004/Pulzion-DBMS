@@ -7,7 +7,7 @@ router = APIRouter()
 @router.get("/metadata/generate")
 async def generate_db_metadata():
     try:
-        metadata = generate_metadata(queries, connection_uri)
+        metadata = generate_metadata(queries)
         return metadata
     
     except Exception as e:

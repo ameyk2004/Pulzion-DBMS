@@ -63,7 +63,6 @@ def generate_metadata(queries, connection_uri, dbms):
                 "view_definition": view["view_definition"]
             })
         
-        # Process Procedure Metadata
         procedures_result = db._execute(queries["Procedures"])
         procedure_parameters_result = db._execute(queries["Procedure Parameters"])
         database_metadata["number_of_procedures"] = len(procedures_result)
