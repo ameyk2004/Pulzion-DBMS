@@ -8,6 +8,7 @@ python-dotenv
 docker
 psycopg2-binary
 mysql-connector-python
-
+firebase_admin
+pillow
 
 

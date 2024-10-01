@@ -11,9 +11,6 @@ import json
 
 from app.services.query_service import generate_query
 
-API_KEY = 'sk-96f006f61ebd416ea5b99c9ecaece174'  # Replace with your actual API key
-WORQHAT_URL = 'https://api.worqhat.com/api/ai/content/v3' 
-
 class Credentials(BaseModel):
     host: str
     user: str

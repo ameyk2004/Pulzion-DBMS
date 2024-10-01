@@ -23,6 +23,10 @@ class GeminiLLM(LLM):
         prompt = self.promptProvider.generateOptimizedQueryPromptText(query, context_string)
         return prompt
     
+    def __generateVisualizationPrompt(self, results):
+        prompt = self.promptProvider.generateVisualizationPromptText(results)
+        return prompt
+    
     def __appendToHistory(self,role:str, res:str):
         self.history.append({"role": role, "content": res})
 
@@ -31,6 +35,10 @@ class GeminiLLM(LLM):
         if self.preserve_history:
             self.__appendToHistory("user", prompt)
             self.__appendToHistory("assistant", json.dumps(response.text, indent=0))
+        return response.text
+    
+    def send_prompt_to_model(self, prompt):
+        response = self.chat_session.send_message(prompt)
         return response.text
 
     def __init__(self, preserve_history:bool):
@@ -64,7 +72,6 @@ class GeminiLLM(LLM):
         )
     
     def set_context(self, context):
-        # Generate a descriptive json context first
         response_text = self.__send_message_to_model(self.__generateDescriptionPrompt(context))
         return response_text
 
@@ -75,12 +82,18 @@ class GeminiLLM(LLM):
     def optimize_query(self, query: str, context_json) -> dict:
         response_text = self.__send_message_to_model(self.__generateOptimizedQueryPrompt(query, context_json))
         return response_text
+    
+    def visualize_data(self, results):
+        response_text = self.send_prompt_to_model(self.__generateVisualizationPrompt(results))
+        data = json.loads(response_text.replace("```json"," ").replace("```"," "))
+        return data
 
     def run_query(self, prompt, context):
         descriptive_json_context = self.set_context(context=context)
         query = self.generate_query(prompt, descriptive_json_context)
         optimized_query = self.optimize_query(query, descriptive_json_context).replace("```json"," ").replace("```"," ")
         data = json.loads(optimized_query)
+        
         result_queries = [query['optimized_output'].replace("\n", " ") for query in data['queries']]
         # result_query = data["optimized_output"].replace("\\n", " ")
         return result_queries

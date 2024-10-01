@@ -102,3 +102,34 @@ class PromptProvider:
 
         """
         return prompt
+    
+
+    def generateVisualizationPromptText(self, results):
+        return f"""
+    I have retrieved a dataset from my SQL database, which is presented below. Your task is to analyze this dataset and determine the best way to present the information. Specifically:
+
+    Identify key patterns, trends, or relationships within the data (e.g., correlations, comparisons, distributions).
+    Based on the analysis, recommend whether the data is best represented as a graphical visualization (such as a bar chart, pie chart, line chart, scatter plot, etc.), a tabular format.
+    If a graph is suitable, specify the type of chart and explain why it is ideal for the data's structure and insights (e.g., comparing categories, displaying trends, or highlighting proportions).
+    If a graph is not appropriate, recommend an alternative format (such as a table) and explain why it better conveys the data.
+    Consider factors like data types (categorical, numerical, etc.), value ranges, and whether the dataset lends itself to comparisons, distributions, or temporal trends.
+
+    Dataset from SQL query:
+    {results}
+
+    STRICTLY FOLLOW RESPONSE FORMAT
+
+    ALSO GENERATE PYTHON CODE TO CREATE THE GRAPHICAL VISUALIZATION OR THE TABLE FORMAT USING MATPLOTLIB
+
+    Response format:
+    {{
+        "response": {{
+            "Is graph possible": "true or false",
+            "graph type": " -- or 'table' if graph generation not needed",
+            "Insights": "This should be a list of insights about the observations of results given",
+            "Code": "Return Python code for matplotlib-based visualization or table"
+        }}
+    }}
+
+    IMPORTANT: RETURN RESPONSE IN ONLY JSON FORMAT, NO ADDITIONAL EXPLANATION.
+    """
