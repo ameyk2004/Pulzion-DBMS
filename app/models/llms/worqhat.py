@@ -18,8 +18,9 @@ class WorqhatLLM(LLM):
         prompt = self.promptProvider.generateQueryPromptText(query, context_string)
         return prompt
     
-    def __generateOptimizedQueryPrompt(self,query):
-        prompt = self.promptProvider.generateOptimizedQueryPromptText(query)
+    def __generateOptimizedQueryPrompt(self,query, context_json):
+        context_string = json.dumps(context_json, indent=2)
+        prompt = self.promptProvider.generateOptimizedQueryPromptText(query, context_string)
         return prompt
     
     def __appendToHistory(self,role:str, res:str):
@@ -76,36 +77,18 @@ class WorqhatLLM(LLM):
         response_text = self.__send_message_to_worqhat(self.__generateQueryPrompt(prompt, context_json))
         return response_text
 
-    def optimize_query(self, query: str) -> dict:
-        response_text = self.__send_message_to_worqhat(self.__generateOptimizedQueryPrompt(query))
+    def optimize_query(self, query: str, context_json) -> dict:
+        response_text = self.__send_message_to_worqhat(self.__generateOptimizedQueryPrompt(query, context_json))
         return response_text
 
     def run_query(self, prompt, context):
         descriptive_json_context = self.set_context(context=context)
-        
-        if descriptive_json_context is None:
-            return None
-
         query = self.generate_query(prompt, descriptive_json_context)
-
-        if query is None:
-            return None
-
-        optimized_query = self.optimize_query(query)
-
-        # Check if optimization failed
-        if optimized_query is None:
-            print("Failed to optimize query.")
-            return None
-
-        try:
-            optimized_query = optimized_query.replace("```json", " ").replace("```", " ")
-            data = json.loads(optimized_query)
-            result_query = data["optimized_output"].replace("\\n", " ")
-            return result_query
-        except (json.JSONDecodeError, KeyError) as e:
-            print(f"Error parsing optimized query: {e}")
-            return None
+        optimized_query = self.optimize_query(query, descriptive_json_context).replace("```json"," ").replace("```"," ")
+        data = json.loads(optimized_query)
+        result_queries = [query['optimized_output'].replace("\n", " ") for query in data['queries']]
+        # result_query = data["optimized_output"].replace("\\n", " ")
+        return result_queries
 
 
 
