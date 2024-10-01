@@ -2,6 +2,7 @@ langchain_community
 psycopg2-binary
 fastapi
 uvicorn
+requests
 
 
 
