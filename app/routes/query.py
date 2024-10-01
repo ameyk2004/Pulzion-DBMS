@@ -14,11 +14,18 @@ from app.services.query_service import generate_query
 API_KEY = 'sk-96f006f61ebd416ea5b99c9ecaece174'  # Replace with your actual API key
 WORQHAT_URL = 'https://api.worqhat.com/api/ai/content/v3' 
 
-# Define a Pydantic model for the request body
+class Credentials(BaseModel):
+    host: str
+    user: str
+    password: str
+    database: str
+    port : str
+
 class QueryRequest(BaseModel):
     query: str 
     model: str
     dbms: str
+    credentials: Credentials
 
 router = APIRouter()
 
@@ -33,17 +40,11 @@ async def send_query(request: QueryRequest):
     print(f"NLP Query: {nlp_query}")
     print(f"Model : {model}")
     print(f"Database : {dbms}")
+    
 
-    sql_queries= generate_query(nlp_query, model, dbms)
-
-    db_user = "postgres"
-    db_password = "Amey1234"
-    db_host = "localhost"
-    db_name = "fastapi_db"
-    db_port = '5432'
-
-    my_db = PostgresLocal(db_host,db_user, db_password, db_name)
-
+    credentials = request.credentials
+    my_db = PostgresLocal(credentials.host,credentials.user, credentials.password, credentials.database)
+    sql_queries= generate_query(nlp_query, model, dbms, my_db.connection_uri)
     my_db.connect()
     results = my_db.run_queries(sql_queries)
 

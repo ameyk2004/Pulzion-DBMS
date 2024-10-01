@@ -84,13 +84,3 @@ class GeminiLLM(LLM):
         result_queries = [query['optimized_output'].replace("\n", " ") for query in data['queries']]
         # result_query = data["optimized_output"].replace("\\n", " ")
         return result_queries
-
-# json_context = '''{"database_name":"fastapi_db","number_of_tables":4,"number_of_views":1,"number_of_procedures":0,"procedures":{},"tables":{"users":{"columns":{"id":{"isPrimaryKey":true,"isIndexed":true,"isForeignKey":false,"ReferencedTableNames":[]},"password":{"isPrimaryKey":false,"isIndexed":false,"isForeignKey":false,"ReferencedTableNames":[]},"email":{"isPrimaryKey":false,"isIndexed":true,"isForeignKey":false,"ReferencedTableNames":[]},"cretated_at":{"isPrimaryKey":false,"isIndexed":false,"isForeignKey":false,"ReferencedTableNames":[]},"name":{"isPrimaryKey":false,"isIndexed":false,"isForeignKey":false,"ReferencedTableNames":[]}},"number_of_columns":5},"posts":{"columns":{"created_at":{"isPrimaryKey":false,"isIndexed":false,"isForeignKey":false,"ReferencedTableNames":[]},"title":{"isPrimaryKey":false,"isIndexed":false,"isForeignKey":false,"ReferencedTableNames":[]},"published":{"isPrimaryKey":false,"isIndexed":false,"isForeignKey":false,"ReferencedTableNames":[]},"id":{"isPrimaryKey":true,"isIndexed":true,"isForeignKey":false,"ReferencedTableNames":[]},"content":{"isPrimaryKey":false,"isIndexed":false,"isForeignKey":false,"ReferencedTableNames":[]},"owner_id":{"isPrimaryKey":false,"isIndexed":false,"isForeignKey":true,"ReferencedTableNames":["users"]}},"number_of_columns":6},"viewpostvotes":{"columns":{"title":{"isPrimaryKey":false,"isIndexed":false,"isForeignKey":false,"ReferencedTableNames":[]},"vote_count":{"isPrimaryKey":false,"isIndexed":false,"isForeignKey":false,"ReferencedTableNames":[]}},"number_of_columns":2},"votes":{"columns":{"post_id":{"isPrimaryKey":true,"isIndexed":true,"isForeignKey":true,"ReferencedTableNames":["posts"]},"user_id":{"isPrimaryKey":true,"isIndexed":true,"isForeignKey":true,"ReferencedTableNames":["users"]}},"number_of_columns":2}},"views":[{"view_name":"viewpostvotes","view_definition":" SELECT posts.title,\n    count(votes.post_id) AS vote_count\n   FROM (posts\n     LEFT JOIN votes ON ((posts.id = votes.post_id)))\n  GROUP BY posts.title;"}]}'''
-
-# prompt = "Get all posts from user Amey"
-
-# llm = GeminiLLM(preserve_history=True)
-# llm.load_model()
-# print(prompt)
-# query = llm.run_query(prompt=prompt, context=json_context)
-# print(query)

@@ -1,5 +1,3 @@
-
-
 db_user = "postgres"
 db_password = "Amey1234"
 db_host = "localhost"

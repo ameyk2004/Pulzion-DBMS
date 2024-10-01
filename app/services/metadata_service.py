@@ -7,7 +7,6 @@ def generate_metadata(queries, connection_uri, dbms):
         db = SQLDatabase.from_uri(connection_uri)
 
         database_metadata = {
-            "database_name": db_name,
             "number_of_tables": 0,
             "number_of_views": 0,
             "number_of_procedures": 0,
