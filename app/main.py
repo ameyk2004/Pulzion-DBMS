@@ -21,4 +21,3 @@ app.include_router(query_router, prefix="/api")
 async def read_root():
     return {"message": "Welcome to the NLP to SQL API!"}
 
-# Include any other routes or middlewares here as needed

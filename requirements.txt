@@ -3,6 +3,7 @@ psycopg2-binary
 fastapi
 uvicorn
 requests
+google.generativeai
 
 
 
