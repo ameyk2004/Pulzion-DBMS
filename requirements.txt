@@ -1,14 +1,15 @@
-langchain_community
-psycopg2-binary
 fastapi
-uvicorn
 requests
+uvicorn
 google.generativeai
 python-dotenv
 docker
 psycopg2-binary
 mysql-connector-python
-firebase_admin
 pillow
+langchain_community
+matplotlib
+firebase_admin
+pandas
 
 

@@ -85,7 +85,14 @@ class GeminiLLM(LLM):
     
     def visualize_data(self, results):
         response_text = self.send_prompt_to_model(self.__generateVisualizationPrompt(results))
-        data = json.loads(response_text.replace("```json"," ").replace("```"," "))
+        response_text = response_text.replace("```json", "").replace("```", "").strip()
+        print("Cleaned Response Text:", response_text)
+        try:
+            data = json.loads(response_text)
+        except json.JSONDecodeError as e:
+            print(f"JSONDecodeError: {e.msg} at line {e.lineno} column {e.colno} (char {e.pos})")
+            data = {"response":[]}
+
         return data
 
     def run_query(self, prompt, context):

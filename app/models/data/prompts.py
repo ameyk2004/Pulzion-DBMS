@@ -106,30 +106,37 @@ class PromptProvider:
 
     def generateVisualizationPromptText(self, results):
         return f"""
-    I have retrieved a dataset from my SQL database, which is presented below. Your task is to analyze this dataset and determine the best way to present the information. Specifically:
+    I have retrieved multiple datasets from my SQL database, which are presented below. Each dataset corresponds to a different query. Your task is to analyze each dataset and determine the best way to present the information. Specifically:
 
-    Identify key patterns, trends, or relationships within the data (e.g., correlations, comparisons, distributions).
-    Based on the analysis, recommend whether the data is best represented as a graphical visualization (such as a bar chart, pie chart, line chart, scatter plot, etc.), a tabular format.
-    If a graph is suitable, specify the type of chart and explain why it is ideal for the data's structure and insights (e.g., comparing categories, displaying trends, or highlighting proportions).
-    If a graph is not appropriate, recommend an alternative format (such as a table) and explain why it better conveys the data.
-    Consider factors like data types (categorical, numerical, etc.), value ranges, and whether the dataset lends itself to comparisons, distributions, or temporal trends.
+    1. For each dataset, identify key patterns, trends, or relationships within the data (e.g., correlations, comparisons, distributions).
+    2. Based on the analysis of each dataset, recommend whether the data is best represented as a graphical visualization (such as a bar chart, pie chart, line chart, scatter plot, etc.) or a tabular format.
+    3. If a graph is suitable, specify the type of chart and explain why it is ideal for the data's structure and insights (e.g., comparing categories, displaying trends, or highlighting proportions).
+    4. If a graph is not appropriate, recommend an alternative format (such as a table) and explain why it better conveys the data.
+    5. Consider factors like data types (categorical, numerical, etc.), value ranges, and whether the dataset lends itself to comparisons, distributions, or temporal trends.
 
-    Dataset from SQL query:
+    Datasets from SQL query:
     {results}
+
+    Each dataset in the results array should be processed independently, and appropriate representations should be determined for each.
 
     STRICTLY FOLLOW RESPONSE FORMAT
 
-    ALSO GENERATE PYTHON CODE TO CREATE THE GRAPHICAL VISUALIZATION OR THE TABLE FORMAT USING MATPLOTLIB
+    ALSO GENERATE PYTHON CODE TO CREATE THE GRAPHICAL VISUALIZATION OR THE TABLE FORMAT USING MATPLOTLIB.
+
+    only Python code no other code also kindly return correct json format adhering to given response example.
 
     Response format:
     {{
-        "response": {{
-            "Is graph possible": "true or false",
-            "graph type": " -- or 'table' if graph generation not needed",
-            "Insights": "This should be a list of insights about the observations of results given",
-            "Code": "Return Python code for matplotlib-based visualization or table"
-        }}
+        "response": [
+            {{
+                "Is graph possible": "true or false",
+                "graph type": " -- or 'table' if graph generation not needed",
+                "Insights": "This should be a list of insights about the observations of results given",
+                "Code": "Return Python code for matplotlib-based visualization or table ",
+            }},
+            {{
+                ...
+            }}
+        ]
     }}
-
-    IMPORTANT: RETURN RESPONSE IN ONLY JSON FORMAT, NO ADDITIONAL EXPLANATION.
     """

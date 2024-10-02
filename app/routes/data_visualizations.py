@@ -12,8 +12,12 @@ async def send_query(request: QueryRequest):
 
     results = request.results
     response = generate_data_visualization(results)
-    print(response["response"]["Code"])
-    execute_code_from_string(response["response"]["Code"])
+
+    data = response["response"]
+
+    for res in data:
+        print(res["Code"])
+        execute_code_from_string(res["Code"])
     return response
 
 
