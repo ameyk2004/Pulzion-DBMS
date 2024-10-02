@@ -1,20 +1,16 @@
-from firebase_admin import storage
+from firebase_admin import storage, credentials, initialize_app
+from firebase_admin import credentials
 
-from app.services.firebase_services.firebase_config import initialize_firebase
+cred = credentials.Certificate("app/pulzion-app-firebase-adminsdk-s7c7d-e8362f219f.json")
+initialize_app(cred, {
+    'storageBucket': 'pulzion-app.appspot.com'
+})
 
-initialize_firebase()
+def store_to_firebasebase(img_buffer, file_name):
+    bucket = storage.bucket()
+    blob = bucket.blob(file_name)
+    blob.upload_from_file(img_buffer, content_type='image/png')
+    blob.make_public()
 
-def upload_image_to_storage(file_path, file_name):
-    
-    try:
-        bucket = storage.bucket()
-        blob = bucket.blob(file_name)
-        blob.upload_from_filename(file_path)
-        blob.make_public()
-        public_url = blob.public_url
-
-        print(f"File uploaded successfully: {public_url}")
-        return public_url
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return None
+    public_url = blob.public_url
+    print(f"File uploaded successfully: {public_url}")

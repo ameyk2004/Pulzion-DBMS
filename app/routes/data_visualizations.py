@@ -15,9 +15,11 @@ async def send_query(request: QueryRequest):
 
     data = response["response"]
 
+    count = 1
+
     for res in data:
-        print(res["Code"])
-        execute_code_from_string(res["Code"])
+        execute_code_from_string(res["Code"], res["data"], count)
+        count +=1
     return response
 
 

@@ -114,29 +114,77 @@ class PromptProvider:
     4. If a graph is not appropriate, recommend an alternative format (such as a table) and explain why it better conveys the data.
     5. Consider factors like data types (categorical, numerical, etc.), value ranges, and whether the dataset lends itself to comparisons, distributions, or temporal trends.
 
-    Datasets from SQL query:
+    **Datasets from SQL query:**
     {results}
 
     Each dataset in the results array should be processed independently, and appropriate representations should be determined for each.
 
-    STRICTLY FOLLOW RESPONSE FORMAT
+    STRICTLY FOLLOW RESPONSE FORMAT AND ONLY RETURN PYTHON CODE.
 
-    ALSO GENERATE PYTHON CODE TO CREATE THE GRAPHICAL VISUALIZATION OR THE TABLE FORMAT USING MATPLOTLIB.
+    **Response format:**
 
-    only Python code no other code also kindly return correct json format adhering to given response example.
-
-    Response format:
     {{
         "response": [
             {{
                 "Is graph possible": "true or false",
-                "graph type": " -- or 'table' if graph generation not needed",
+                "graph type": "-- or 'table' if graph generation not needed",
                 "Insights": "This should be a list of insights about the observations of results given",
-                "Code": "Return Python code for matplotlib-based visualization or table ",
+                "Code": "Return Python code for matplotlib-based visualization or table",
+                "data": "Include the data that should be passed to the generate_graph function here"
             }},
             {{
                 ...
             }}
         ]
     }}
+
+    **Restrictions on code generation:**
+
+    1. Do not use the `.show()` method to display the image. I want to store the image in Firebase storage instead.
+    2. Generate an image buffer from matplotlib and pass it to the function with the filename.
+    3. Ensure the filename for each subsequent graph follows a pattern like `graph_1.png`, `graph_2.png`, etc.
+    4. Use the following code snippet to execute Firebase logic and store the image:
+    5. Append public URLs of stored images to the `image_urls` list (which is pre-defined).
+    6. If table generation is preferred, return a blank code string (no Pandas table).
+    7. The Python function should return an image buffer to be passed to Firebase storage logic.
+    
+    
+    IMPORTANT: Outside the function definition, give a list named 'data' which contains data needed to be passed to the generate_graph function.
+
+    Example:
+
+    data = [{{'loan_type': 'Auto', 'percentage': 40.0}},
+        {{'loan_type': 'Home', 'percentage': 40.0}},
+        {{'loan_type': 'Personal', 'percentage': 20.0}}]
+
+    
+
+    DO NOT LEAVE PLACEHOLDER OR ANY CODE RELATED TO save_image_to_firebase function; it has been imported and implemented by me.
+    
+    **Code Example Snippet:**
+
+    import matplotlib.pyplot as plt
+
+    from io import BytesIO
+
+    def generate_graph(data, graph_number):
+        # Example graph generation logic
+        fig, ax = plt.subplots()
+        ax.plot(data['x'], data['y'])
+
+        # Create filename based on the graph number
+        filename = f"graph_{{graph_number}}.png"
+
+        image_buffer = BytesIO()
+        plt.savefig(image_buffer, format='png')
+        image_buffer.seek(0)
+
+        save_image_to_firebase(image_buffer, filename)
+        return image_buffer
+
+    YOU SHOULD RETURN JSON ONLY
+
+    DONT RETURN CODE SEPARATELY
+
+    I Want JSON response only as output
     """
