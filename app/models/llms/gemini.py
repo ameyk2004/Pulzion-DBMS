@@ -94,14 +94,23 @@ class GeminiLLM(LLM):
     
     def set_context(self, context):
         response_text = self.__send_message_to_model(self.__generateDescriptionPrompt(context))
+        print("DESCRIPTIVE JSON: ")
+        response_text = re.search(r'```json([\s\S]*?)```', response_text).group(1).strip()
+        print(response_text)
         return response_text
 
     def generate_query(self, prompt: str, context_json) -> dict:
         response_text = self.__send_message_to_model(self.__generateQueryPrompt(prompt, context_json))
+        print("PROMPT GENERATED: ")
+        response_text = re.search(r'```json([\s\S]*?)```', response_text).group(1).strip()
+        print(response_text)
         return response_text
 
     def optimize_query(self, query: str, context_json) -> dict:
         response_text = self.__send_message_to_model(self.__generateOptimizedQueryPrompt(query, context_json))
+        print("OPTIMIZED PROMPT: ")
+        response_text = re.search(r'```json([\s\S]*?)```', response_text).group(1).strip()
+        print(response_text)
         return response_text
     
     def visualize_data(self, results):
