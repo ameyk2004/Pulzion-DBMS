@@ -128,6 +128,9 @@ class PromptProvider:
             ]
         }}
 
+
+        JUST GIVE OUTPUT IN FORM OF JSON ONLY OR ELSE I WILL FUCKING KILL YOUUUUU
+
         """
         return prompt
     

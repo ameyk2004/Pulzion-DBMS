@@ -3,6 +3,7 @@ import os
 import json
 import google.generativeai as genai
 from dotenv import load_dotenv
+import re
 from app.models.data.prompts import PromptProvider
 load_dotenv()
 
@@ -94,12 +95,21 @@ class GeminiLLM(LLM):
 
         return data
 
+
     def run_query(self, prompt, context):
+        print("\n\n\nRUN QUERY FUNCTION")
+
         descriptive_json_context = self.set_context(context=context)
         query = self.generate_query(prompt, descriptive_json_context)
+
+        print("\n\n\nQUERY ", query)
         optimized_query = self.optimize_query(query, descriptive_json_context).replace("```json"," ").replace("```"," ")
+        print("\n\n\OPTIMISED ", optimized_query)
         data = json.loads(optimized_query)
+
+        print(data)
         
         result_queries = [query['optimized_output'].replace("\n", " ") for query in data['queries']]
+        print(result_queries)
         # result_query = data["optimized_output"].replace("\\n", " ")
         return result_queries
