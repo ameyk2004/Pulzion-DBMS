@@ -50,27 +50,53 @@ class PromptProvider:
         {context_string}
     """
 
-    def generateQueryPromptText(self,query, context_string):
-
+    def generateQueryPromptText(self, query, context_string):
         return f"""
-        I am providing you with a JSON structure containing metadata about a database, including tables, columns, relationships, and views. Based on this information, please analyze the following user query and generate the corresponding SQL queries.
-        - IMPORTANT NOTE: FOR ANY QUERY Do not USE ANY DBMS SPECIFIC COMMAND INSTEAD USE NESTED SELECT QUERIES IF REQUIRED
-        User Query: "{query}"
+    I am providing you with a JSON structure containing metadata about a database, including tables, columns, relationships, and views. Based on this information, please analyze the following user query and generate the corresponding SQL queries.
 
-        Context JSON:
-        {context_string}
+    - IMPORTANT NOTE: For any query, do not use any DBMS-specific commands; instead, use nested select queries if required.
 
-        It is possible that multiple SQL queries are needed to answer this user query (e.g., queries involving joins, aggregations, or filtering across different tables). 
-        Please generate all necessary SQL queries and return them in a structured JSON format as follows:
-        {{
-            "queries": [
-                {{ "output": " --query1 " }},
-                {{ "output": " --query2 " }},
-                ...
-            ]
-        }}
-        - IMPORTANT NOTE: Return only the JSON structure and avoid any extra commentary, key points, or explanations
-        """
+    User Query: "{query}"
+
+    Context JSON:
+    {context_string}
+
+    Processing Steps:
+    1. Analyze the user query step by step to identify the required data elements and relationships based on the provided context.
+    2. If the user query can be logically combined into a single SQL query (e.g., queries that involve aggregations like counts and percentages of the same data), please consolidate related components into one comprehensive query.
+    3. Ensure that if multiple queries are necessary, they should be distinct based on the user request and should not be combined if they represent different outputs.
+    4. Maintain clarity and conciseness while ensuring the correctness of the logic in the queries.
+
+    Examples:
+    - **Do's**:
+        - If the user asks for the percentage distribution of loans by type and also needs the total count of loans, combine them into one query:
+            - **Expected Output**: 
+              ```sql
+              SELECT loan_type, COUNT(*) AS loan_count, (COUNT(*) * 100.0 / (SELECT COUNT(*) FROM loans)) AS percentage
+              FROM loans
+              GROUP BY loan_type
+              ```
+
+    - **Don'ts**:
+        - Avoid generating separate queries for related data points, such as:
+            - **Incorrect Output**:
+              ```sql
+              SELECT loan_type, COUNT(*) AS loan_count FROM loans GROUP BY loan_type
+              SELECT loan_type, (COUNT(*) * 100.0 / (SELECT COUNT(*) FROM loans)) AS percentage FROM loans GROUP BY loan_type
+              ```
+        - Instead, return a single comprehensive query that encapsulates both requirements.
+
+    Please generate all necessary SQL queries and return them in a structured JSON format as follows:
+    {{
+        "queries": [
+            {{ "output": " --combined_query " }},
+            {{ "output": " --additional_query_if_needed " }}
+        ]
+    }}
+
+    - IMPORTANT NOTE: Return only the JSON structure and avoid any extra commentary, key points, or explanations.
+    """
+
     
     def generateOptimizedQueryPromptText(self,query,context_string):
         prompt = f"""
@@ -91,6 +117,8 @@ class PromptProvider:
         Please optimize this query for better performance, ensuring that the required results remain unchanged.
         It is possible that the query doesn't need any optimization. In that case, return the original query
         Return the optimized query in the following JSON format:
+
+        IF YOU ARE USING 2 QUERIES TO PRODUCE ONLY ONE PART OF THE ANSWER USE NESTED QUERY INSTEAD OF RETURNING 2 SEPARATE
 
         {{
             "queries": [

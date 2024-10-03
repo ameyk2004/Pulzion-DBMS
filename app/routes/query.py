@@ -5,11 +5,11 @@ from app.models.data.postgres_local import PostgresLocal
 from app.services.metadata_service import generate_metadata
 from app.config import connection_uri, queries
 from app.services.metadata_service import generate_metadata
-import requests
+from app.services.query_service import generate_query
 
+import requests
 import json
 
-from app.services.query_service import generate_query
 
 class Credentials(BaseModel):
     host: str
@@ -38,7 +38,6 @@ async def send_query(request: QueryRequest):
     print(f"Model : {model}")
     print(f"Database : {dbms}")
     
-
     credentials = request.credentials
     my_db = PostgresLocal(credentials.host,credentials.user, credentials.password, credentials.database)
     sql_queries= generate_query(nlp_query, model, dbms, my_db.connection_uri)

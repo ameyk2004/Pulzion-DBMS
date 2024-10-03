@@ -6,9 +6,10 @@ from app.routes.data_visualizations import router as data_visualizations_router
 
 app = FastAPI()
 
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # Adjust to your needs; "*" allows all
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
