@@ -178,7 +178,7 @@ class PromptProvider:
     
     
     IMPORTANT: Outside the function definition, give a list named 'data' which contains data needed to be passed to the generate_graph function.
-
+    IMPORTANT: PLEASE GIVE DETAILED INSIGHTS IN LIST, The sentences should be short in list but the length of list should be at least 3 or 4.
     Example:
 
     data = [{{'loan_type': 'Auto', 'percentage': 40.0}},
