@@ -64,9 +64,29 @@ class GeminiLLM(LLM):
         self.promptProvider = PromptProvider()
 
     def load_model(self):
+        self.safe = [
+        {
+            "category": "HARM_CATEGORY_HARASSMENT",
+            "threshold": "BLOCK_NONE",
+        },
+        {
+            "category": "HARM_CATEGORY_HATE_SPEECH",
+            "threshold": "BLOCK_NONE",
+        },
+        {
+            "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+            "threshold": "BLOCK_NONE",
+        },
+        {
+            "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+            "threshold": "BLOCK_NONE",
+        },
+    ]
+
         self.model = genai.GenerativeModel(
             model_name=self.GEMINI_MODEL_NAME,
             generation_config=self.generation_config,
+            safety_settings=self.safe
         )
         self.chat_session = self.model.start_chat(
             history=self.history

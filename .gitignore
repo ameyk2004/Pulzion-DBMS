@@ -7,3 +7,4 @@ app/models/llms/__pycache__/
 app/routes/__pycache__/
 app/services/__pycache__/
 app/services/firebase_services/data/pulzion-app-firebase-adminsdk-s7c7d-39e2f2380b.json
+__pycache__

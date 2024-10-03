@@ -1,6 +1,7 @@
 class PromptProvider:
         
     def generateDescriptionPromptText(self,context_string):
+        print(context_string)
         return f"""
         I have provided a JSON structure containing metadata about a database, including tables, views, and procedures. 
         Please analyze the data step by step and return a new JSON structure with the following requirements:
@@ -95,6 +96,8 @@ class PromptProvider:
     }}
 
     - IMPORTANT NOTE: Return only the JSON structure and avoid any extra commentary, key points, or explanations.
+    - IMPORTANT NOTE: only use dbms specific commands if and only if required. If it is possible with pure sql queries then use that only
+    - IMPORTANT NOTE: we are using dbms which is given in "dbms used" key of the context json so make sure the queries are executable in that dbms software
     """
 
     
@@ -129,7 +132,10 @@ class PromptProvider:
         }}
 
 
-        JUST GIVE OUTPUT IN FORM OF JSON ONLY OR ELSE I WILL FUCKING KILL YOUUUUU
+        
+        - IMPORTANT NOTE: Return only the JSON structure and avoid any extra commentary, key points, or explanations.
+        - IMPORTANT NOTE: only use dbms specific commands if and only if required. If it is possible with pure sql queries then use that only
+        - IMPORTANT NOTE: we are using dbms which is given in "dbms used" key of the context json so make sure the queries are executable in that dbms software
 
         """
         return prompt
