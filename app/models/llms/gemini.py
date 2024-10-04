@@ -115,7 +115,9 @@ class GeminiLLM(LLM):
     
     def visualize_data(self, results):
         response_text = self.send_prompt_to_model(self.__generateVisualizationPrompt(results))
-        response_text = response_text.replace("```json", "").replace("```", "").replace("python", "").strip()
+        response_text = re.search(r'```json([\s\S]*?)```', response_text).group(1).strip()
+        print(response_text)
+        # response_text = response_text.replace("```json", "").replace("```", "").replace("python", "").strip()
         try:
             data = json.loads(response_text)
         except json.JSONDecodeError as e:
@@ -133,7 +135,7 @@ class GeminiLLM(LLM):
 
         print("\n\n\nQUERY ", query)
         optimized_query = self.optimize_query(query, descriptive_json_context).replace("```json"," ").replace("```"," ")
-        print("\n\n\OPTIMISED ", optimized_query)
+        print("\n\nOPTIMISED ", optimized_query)
         data = json.loads(optimized_query)
 
         print(data)

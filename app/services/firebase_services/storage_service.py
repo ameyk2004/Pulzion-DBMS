@@ -2,7 +2,7 @@ from firebase_admin import storage, credentials, initialize_app
 from firebase_admin import credentials
 import uuid
 
-cred = credentials.Certificate("app/services/firebase_services/data/pulzion-app-firebase-adminsdk-s7c7d-8ce96f027c.json")
+cred = credentials.Certificate("app/services/firebase_services/data/pulzion-app-firebase-adminsdk-s7c7d-eb13410afa.json")
 initialize_app(cred, {
     'storageBucket': 'pulzion-app.appspot.com'
 })
