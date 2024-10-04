@@ -35,6 +35,11 @@ class LLM(ABC):
         
         :param context: A dictionary of metadata or any required context information.
         """
+    @abstractmethod
+    def visualize_data(self, results):
+        """
+        Call Visualize function
+        """
         
     @abstractmethod
     def run_query(self, prompt, context):

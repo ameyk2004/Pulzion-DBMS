@@ -14,6 +14,7 @@ def load_model(model):
     
 def generate_query(prompt, model, dbms, connection_uri):
     json_context = generate_metadata(queries, connection_uri, dbms)
+    print(json_context)
     print("Meta Data generated")
     llm = load_model(model)
     llm.load_model()

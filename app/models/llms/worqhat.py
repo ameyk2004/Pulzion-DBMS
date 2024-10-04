@@ -1,6 +1,7 @@
 from app.models.llm import LLM
 import os
 import json
+import re
 import requests
 from dotenv import load_dotenv
 load_dotenv()
@@ -23,11 +24,15 @@ class WorqhatLLM(LLM):
         prompt = self.promptProvider.generateOptimizedQueryPromptText(query, context_string)
         return prompt
     
+    def __generateVisualizationPrompt(self, results):
+        prompt = self.promptProvider.generateVisualizationPromptText(results)
+        return prompt
+    
     def __appendToHistory(self,role:str, res:str):
         self.history.append({"role": role, "content": res})
 
     def __send_message_to_worqhat(self, prompt):
-        WORQHAT_URL = 'https://api.worqhat.com/api/ai/content/v3'
+        WORQHAT_URL = 'https://api.worqhat.com/api/ai/content/v2'
         API_KEY = os.getenv('WORQHAT_API_KEY')
 
         headers = {
@@ -81,12 +86,37 @@ class WorqhatLLM(LLM):
         response_text = self.__send_message_to_worqhat(self.__generateOptimizedQueryPrompt(query, context_json))
         return response_text
 
+    def visualize_data(self, results):
+
+        print("\n\n\nWORQHAT CALL")
+              
+        response_text = self.__send_message_to_worqhat(self.__generateVisualizationPrompt(results))
+        response_text = re.search(r'```json([\s\S]*?)```', response_text).group(1).strip()
+        print(response_text)
+        # response_text = response_text.replace("```json", "").replace("```", "").replace("python", "").strip()
+        try:
+            data = json.loads(response_text)
+        except json.JSONDecodeError as e:
+            print(f"JSONDecodeError: {e.msg} at line {e.lineno} column {e.colno} (char {e.pos})")
+            data = {"response": []}
+
+        return data
+
     def run_query(self, prompt, context):
+        print("\n\n\nRUN QUERY FUNCTION")
+
         descriptive_json_context = self.set_context(context=context)
         query = self.generate_query(prompt, descriptive_json_context)
+
+        print("\n\n\nQUERY ", query)
         optimized_query = self.optimize_query(query, descriptive_json_context).replace("```json"," ").replace("```"," ")
+        print("\n\nOPTIMISED ", optimized_query)
         data = json.loads(optimized_query)
+
+        print(data)
+        
         result_queries = [query['optimized_output'].replace("\n", " ") for query in data['queries']]
+        print(result_queries)
         # result_query = data["optimized_output"].replace("\\n", " ")
         return result_queries
 

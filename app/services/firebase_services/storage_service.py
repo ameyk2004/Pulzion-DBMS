@@ -2,7 +2,7 @@ from firebase_admin import storage, credentials, initialize_app
 from firebase_admin import credentials
 import uuid
 
-cred = credentials.Certificate("app/services/firebase_services/data/pulzion-app-firebase-adminsdk-s7c7d-eb13410afa.json")
+cred = credentials.Certificate("app/services/firebase_services/data/pulzion-app-firebase-adminsdk-s7c7d-a6fe7de60d.json")
 initialize_app(cred, {
     'storageBucket': 'pulzion-app.appspot.com'
 })
@@ -17,4 +17,6 @@ def store_to_firebasebase(img_buffer, file_name):
     public_url = blob.public_url
     print(f"File uploaded successfully: {public_url}")
     return public_url
+    
+
     

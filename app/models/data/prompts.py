@@ -1,7 +1,10 @@
 class PromptProvider:
+
+    COMMON_DECLARATION_SQL = "Please restrict your responses exclusively to SQL queries topics. Any queries or requests that do not pertain to these subjects should receive a standardized response of SELECT NOT FOUND. This includes but is not limited to general programming inquiries, theoretical discussions, or unrelated topics. Ensure that all information provided is accurate and relevant to SQL or data visualization."
+    COMMON_DECLARATION_VIZ = "Please restrict your responses exclusively to data visualization topics. Any queries or requests that do not pertain to these subjects should receive a standardized response of SELECT NOT FOUND. This includes but is not limited to general programming inquiries, theoretical discussions, or unrelated topics. Ensure that all information provided is accurate and relevant to SQL or data visualization."
         
     def generateDescriptionPromptText(self,context_string):
-        print(context_string)
+        
         return f"""
         I have provided a JSON structure containing metadata about a database, including tables, views, and procedures. 
         Please analyze the data step by step and return a new JSON structure with the following requirements:
